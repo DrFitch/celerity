@@ -6,9 +6,11 @@ import inquirer from 'inquirer';
 import { Spinner } from 'cli-spinner';
 
 // const provider = provider;
-const rpcURL = "http://turboswap.tech:9650/ext/bc/C/rpc"
-const web3 = new Web3(rpcURL)
-const address = "0x2c5d7333d81eB0eeC7f1ab437d0Bf18f371e06b9"
+const rpcURL = "http://turboswap.tech:9650/ext/bc/C/rpc";
+const web3 = new Web3(rpcURL);
+const address = "0x2c5d7333d81eB0eeC7f1ab437d0Bf18f371e06b9";
+
+//const utilities = new utils();
 
 // CLI 
 inquirer.prompt([
@@ -32,6 +34,7 @@ inquirer.prompt([
 ]).then((answers) => {
     switch (answers.action) {
         case 'benchmark': ;
+            //utilities.test();
             benchmark();
             break;
 
@@ -45,6 +48,9 @@ async function benchmark() {
     console.log('-------------------------------');
     console.log('---------- benchmark ----------');
     console.log('-------------------------------');
+
+    //console.log(boxen('unicorns love rainbows', { title: 'magical', titleAlignment: 'center' }));
+
     console.log('\n');
 
     var spinner = new Spinner('Running benchmark... %s');
@@ -54,7 +60,7 @@ async function benchmark() {
 
     const start_time = Date.now();
     for (let index = 0; index < rounds; index++) {
-        const price = await checkAvaxPrice();
+        const price = await check_avax_price();
     }
 
     spinner.stop(true);
@@ -65,7 +71,8 @@ async function benchmark() {
     console.log(``);
 }
 
-async function checkAvaxPrice() {
+async function check_avax_price() {
+    calculate_gas();
     const web3 = new Web3(rpcURL);
     const nativeToken = "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7" //AVAX
     const usdcToken = "0xA7D7079b0FEaD91F3e65f86E8915Cb59c1a4C664" //USDC.e
@@ -80,7 +87,7 @@ async function checkAvaxPrice() {
     return (amountOut * 10 ** 12);
 }
 
-function setDecimals(number, decimals) {
+function set_decimals(number, decimals) {
     number = number.toString();
     let numberAbs = number.split('.')[0]
     let numberDecimals = number.split('.')[1] ? number.split('.')[1] : '';
@@ -88,6 +95,22 @@ function setDecimals(number, decimals) {
         numberDecimals += "0";
     }
     return numberAbs + numberDecimals;
+}
+
+async function calculate_gas() {
+    const web3 = new Web3(rpcURL);
+    const gas_check = await web3.eth.getGasPrice()
+    const gas_price = await gas_check / 1000000000;
+    console.log('gas_price', gas_price);
+}
+
+async function check_approval() {
+    //contract = client.eth.contract(address=Web3.toChecksumAddress(address), abi=standardAbi)
+    //actual_allowance = contract.functions.allowance(Web3.toChecksumAddress(settings['WALLETADDRESS']), routerAddress).call()
+}
+
+async function approve_token() {
+
 }
 
 // async function calcSell(tokensToSell, tokenAddres) {
